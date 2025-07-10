@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/modern-normalize@3.0.1/modern-normalize.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.typekit.net/wai4xbj.css">
+  <title>MLscript Tutorial</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');
+
+    :root {
+      --monospace: "Fira Code", "SF Mono", Menlo, Consolas, 'Courier New', Courier, monospace;
+    }
+
+    body {
+      font-size: 16px;
+      font-variant: none;
+      font-family: "quire-sans", system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    p,
+    li {
+      line-height: 1.5;
+    }
+
+    pre,
+    code {
+      font-family: var(--monospace);
+    }
+
+    pre code {
+      line-height: 1.25;
+    }
+
+    pre {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 1rem;
+      margin: 1rem 0;
+      background-color: #f8f8f8;
+    }
+
+    p code,
+    li code {
+      font-size: 0.875rem;
+      background-color: #f8f8f8;
+      font-weight: 475;
+      padding: 1px 0.125rem;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>Introduction</h2>
+  <p>MLscript is an object-oriented and functional programming language with records,
+    generic classes, mix-in traits, first-class unions and intersections, instance matching, and ML-style principal type
+    inference. These features can be used to implement expressive class hierarchies as well as extensible sums and
+    products.</p>
+
+  <h2>Values</h2>
+  <p>MLscript has a set of common primitive values.</p>
+
+  <pre><code>0 // Integers
+3.14159 // Real numbers
+true // Boolean
+"this is a string" // String
+[true, false] // Tuples
+</code></pre>
+
+  <p>You can use common operators in JavaScript to build expressions.</p>
+
+  <pre><code>1 + 2 // 3
+1 + 2 * 3 - 4 // 3
+"hello" === "world" // false
+false || true // true
+1 < 2 && 3 > 2 // true
+!false // true
+2 ** 3 // 8
+</code></pre>
+
+  <p>Expressions can be bound to variables via <code>let</code> declarations.</p>
+
+  <pre><code>let x = 1
+let y = 2
+let z = x + y // 3
+</code></pre>
+
+  <h2>Functions</h2>
+
+  <p>Functions can be defined by <code>fun</code> keyword.
+    Parameters need to be enclosed in parentheses.</p>
+
+  <pre><code>fun id(x) = x
+id("hello") // "hello"
+fun sum(x, y) = x + y
+sum(40, 2) // 42
+</code></pre>
+
+  <p>In particular, we support using the `of` operator to call functions without parentheses.</p>
+
+  <pre><code>id of "hello" // "hello"
+sum of 40, 2 // 42
+</code></pre>
+
+  <p>Lambda functions are also supported.</p>
+
+  <pre><code>x =&gt; x
+(x, y) =&gt; x + y
+</code></pre>
+
+  <p>Local functions can also be written in the form using <code>let</code>.</p>
+
+  <pre><code>let sum(x, y) = x + y
+sum(40, 2) // 42
+</code></pre>
+
+  <p>The types of functions are automatically inferred.
+    But you can also specify the types explicitly.
+    Type parameters are enclosed in square brackets.</p>
+
+  <pre><code>fun id[A](x: A): A = x
+</code></pre>
+
+  <h2>Classes</h2>
+
+  <p>We can define classes.
+    For example, the following is a class definition for a simple <code>Point</code> class.
+    It has two parameters <code>x</code> and <code>y</code> of type <code>Int</code>.</p>
+
+  <pre><code>class Point(x: Int, y: Int)
+</code></pre>
+
+  <p>To make parameters accessible by property access <code>.</code>.
+    We have to declare them with <code>val</code>.</p>
+
+  <pre><code>class Point(val x: Int, val y: Int)
+let origin = Point(0, 0)
+origin.x + origin.y // 0
+</code></pre>
+
+  <p>If all the class parameters are accessible, we can use the <code>data</code> modifier instead.</p>
+
+  <pre><code>data class Point(x: Int, y: Int)
+</code></pre>
+
+  <p>We can also define classes with type parameters.</p>
+
+  <pre><code>class Pair[A, B](val first: A, val second: B)
+</code></pre>
+
+  <p>The methods of a class are placed in the block that follows `with`.</p>
+
+  <pre><code>class Point(x: Int, y: Int) with
+  fun distanceToOrigin() = Math.sqrt(x ** 2 + y ** 2)
+</code></pre>
+
+  <h3>Extending Classes</h3>
+
+  <p>Classes can be extended with <code>extends</code> keyword.
+    Here is the definition of <code>Option</code> type in MLscript,
+    which is very common in provided examples.</p>
+
+  <pre><code>abstract class Option[out T]
+class Some[out T](value: T) extends Option[T]
+object None extends Option[nothing]
+</code></pre>
+
+  <ul>
+    <li>Class <code>Option</code> is abstract and has two sub-classes, <code>Some</code> and <code>None</code>.</li>
+    <li>The <code>: (Some[T] | None)</code> clause indicates that type <code>Option[T]</code>
+      only has two possible subtypes: <code>Some[T]</code> and <code>None</code>.</li>
+    <li>The type parameter <code>T</code> is marked as <code>out</code> to indicate that it is covariant.</li>
+    <li><code>module</code> keyword is used to define a singleton object.
+      Here, <code>None</code> can be either used as a value or a type.</li>
+  </ul>
+
+  <h2>Algebraic Data Types</h2>
+
+  <p>The above <code>Option</code> type forms an ADT, and it can also be defined with the
+    <code></code>constructor</code> keyword.</p>
+
+  <pre><code>abstract class Option[out T]
+constructor
+  Some(value: T)
+  None
+</code></pre>
+
+  <p>Similarly, we can define the <code>List</code> type.</p>
+
+  <pre><code>class List[out T] with
+  constructor
+    Cons(val head: T, val tail: List[T])
+    Nil
+</code></pre>
+
+  <p>We can define a list of three integers as follows.</p>
+  <pre><code>Cons(0, Cons(1, Cons(2, Nil)))
+</code></pre>
+
+  <p>To construct lists just like in other functional languages,
+    we can define the concatenation operator <code>::</code>.</p>
+
+  <pre><code>fun (::) cons(x, xs) = Cons(x, xs)
+</code></pre>
+
+  <p>Then we can construct the same list as follows.</p>
+
+  <pre><code>0 :: 1 :: 2 :: Nil
+</code></pre>
+
+  <p>The <code>List</code> type is a common data structure in examples.</p>
+
+  <h3>Pattern Matching</h3>
+
+  <p>We can define many functions that operate on lists.
+    For example, we can define a function that sum all elements in a list.</p>
+
+  <pre><code>fun sum(xs) = if xs is
+  Nil then 0
+  Cons(x, xs') then x + sum(xs')
+</code></pre>
+
+  <p>Now, you can try out the examples provided in this web demo.
+    We hope you can tweak the examples and learn more about MLscript.
+    Have fun!</p>
+
+</body>
+
+</html>
