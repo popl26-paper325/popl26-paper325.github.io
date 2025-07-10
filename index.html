@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/modern-normalize@3.0.1/modern-normalize.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.typekit.net/wai4xbj.css">
+  <link href="main.css" rel="stylesheet">
+  <title>The Ultimate Pattern Syntax Web Demo</title>
+  <script type="importmap">
+    {
+      "imports": {
+        "codemirror": "https://cdn.jsdelivr.net/npm/codemirror@6.0.2/dist/index.min.js",
+        "@codemirror/state": "https://cdn.jsdelivr.net/npm/@codemirror/state@6.5.2/+esm",
+        "@codemirror/view": "https://cdn.jsdelivr.net/npm/@codemirror/view@6.38.1/dist/index.min.js",
+        "crelt": "https://cdn.jsdelivr.net/npm/crelt@1.0.6/+esm",
+        "w3c-keyname": "https://cdn.jsdelivr.net/npm/w3c-keyname@2.2.8/+esm",
+        "style-mod": "https://cdn.jsdelivr.net/npm/style-mod@4.1.2/+esm",
+        "@codemirror/language": "https://cdn.jsdelivr.net/npm/@codemirror/language@6.11.2/dist/index.min.js",
+        "@lezer/common": "https://cdn.jsdelivr.net/npm/@lezer/common@1.2.3/dist/index.min.js",
+        "@lezer/highlight": "https://cdn.jsdelivr.net/npm/@lezer/highlight@1.2.1/dist/index.min.js",
+        "@codemirror/commands": "https://cdn.jsdelivr.net/npm/@codemirror/commands@6.8.1/dist/index.min.js",
+        "@codemirror/search": "https://cdn.jsdelivr.net/npm/@codemirror/search@6.5.11/dist/index.min.js",
+        "@codemirror/autocomplete": "https://cdn.jsdelivr.net/npm/@codemirror/autocomplete@6.18.6/dist/index.min.js",
+        "@codemirror/lint": "https://cdn.jsdelivr.net/npm/@codemirror/lint@6.8.5/dist/index.min.js",
+        "@codemirror/lang-javascript": "https://cdn.jsdelivr.net/npm/@codemirror/lang-javascript@6.2.4/dist/index.min.js",
+        "@lezer/javascript": "https://cdn.jsdelivr.net/npm/@lezer/javascript@1.5.1/dist/index.min.js",
+        "@lezer/lr": "https://cdn.jsdelivr.net/npm/@lezer/lr@1.4.2/dist/index.min.js",
+        "inspect": "https://cdn.jsdelivr.net/npm/object-inspect@1.13.4/+esm",
+        "Runtime.mjs": "/Runtime.mjs",
+        "std/Predef.mjs": "/Predef.mjs",
+        "std/Rendering.mjs": "/Rendering.mjs",
+        "std/Iter.mjs": "/Iter.mjs",
+        "std/Stack.mjs": "/Stack.mjs",
+        "std/Option.mjs": "/Option.mjs",
+        "std/RuntimeJS.mjs": "/RuntimeJS.mjs"
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <div id="app">
+    <nav id="navigation-bar">
+      <div class="brand">The Ultimate Pattern Syntax Web Demo</div>
+    </nav>
+    <div id="input">
+      <header class="toolbar">
+        <span>Examples</span>
+        <select class="select" id="example">
+          <option value="none" disabled><em style="color: #aaa">None</em></option>
+        </select>
+        <div class="compile-time-report"></div>
+        <button class="button" id="new-file">New</button>
+        <button class="button action" id="compile-file">Compile and Run</button>
+      </header>
+      <div id="editor"></div>
+    </div>
+    <div id="output" class="tabs">
+      <span class="text-stages">Stages:</span>
+
+      <input type="radio" id="radio-parser" name="tabgroup" checked>
+      <label for="radio-parser">Parsing</label>
+
+      <input type="radio" id="radio-elaborator" name="tabgroup">
+      <label for="radio-elaborator">Elaboration</label>
+
+      <input type="radio" id="radio-resolver" name="tabgroup">
+      <label for="radio-resolver">Resolution</label>
+
+      <input type="radio" id="radio-lowering" name="tabgroup">
+      <label for="radio-lowering">Lowering</label>
+
+      <input type="radio" id="radio-code-generation" name="tabgroup">
+      <label for="radio-code-generation">Code Generation</label>
+
+      <input type="radio" id="radio-execution" name="tabgroup">
+      <label for="radio-execution">Execution</label>
+
+      <div class="tab-content" id="tab-parser">
+        <h3>Diagnostics</h3>
+        <div class="diagnostics">
+          <pre><code class="output"></code></pre>
+          <div class="text"><em>Click the "Compile" button.</em></div>
+        </div>
+        <hr>
+        <header class="tree-display">
+          <h3>Parsed Trees</h3>
+          <div class="hint">Tips: You can click to open or close the nodes.</div>
+        </header>
+        <div class="trees"><em>Click the "Compile" button.</em></div>
+        <hr>
+        <header class="traces">
+          <h3>Debug Traces</h3>
+          <div>
+            <input type="checkbox" id="show-traces">
+            <label for="show-traces">Record and show traces</label>
+          </div>
+        </header>
+        <pre><code class="traces"></code></pre>
+      </div>
+      <div class="tab-content" id="tab-elaborator">
+        <h3>Diagnostics</h3>
+        <div class="diagnostics">
+          <pre><code class="output"></code></pre>
+          <div class="text"><em>Click the "Compile" button.</em></div>
+        </div>
+        <hr>
+        <header class="tree-display">
+          <h3>Elaborated Tree</h3>
+          <div class="hint">Tips: You can click to open or close the nodes.</div>
+        </header>
+        <div class="tree"><em>Click the "Compile" button.</em></div>
+        <hr>
+        <header class="traces">
+          <h3>Debug Traces</h3>
+          <div>
+            <input type="checkbox" id="show-traces">
+            <label for="show-traces">Record and show traces</label>
+          </div>
+        </header>
+        <pre><code class="traces"></code></pre>
+      </div>
+      <div class="tab-content" id="tab-resolver">
+        <h3>Diagnostics</h3>
+        <div class="diagnostics">
+          <pre><code class="output"></code></pre>
+          <div class="text"><em>Click the "Compile" button.</em></div>
+        </div>
+        <hr>
+        <header class="tree-display">
+          <h3>Elaborated Tree with Resolved Symbols</h3>
+          <div class="hint">Tips: You can click to open or close the nodes.</div>
+        </header>
+        <div class="tree"><em>Click the "Compile" button.</em></div>
+        <hr>
+        <header class="traces">
+          <h3>Debug Traces</h3>
+          <div>
+            <input type="checkbox" id="show-traces">
+            <label for="show-traces">Record and show traces</label>
+          </div>
+        </header>
+        <pre><code class="traces"></code></pre>
+      </div>
+      <div class="tab-content" id="tab-lowering">
+        <h3>Diagnostics</h3>
+        <div class="diagnostics">
+          <pre><code class="output"></code></pre>
+          <div class="text"><em>Click the "Compile" button.</em></div>
+        </div>
+        <hr>
+        <header class="tree-display">
+          <h3>Lowered Block</h3>
+          <div class="hint">Tips: You can click to open or close the nodes.</div>
+        </header>
+        <div class="tree"><em>Click the "Compile" button.</em></div>
+        <hr>
+        <header class="traces">
+          <h3>Debug Traces</h3>
+          <div>
+            <input type="checkbox" id="show-traces">
+            <label for="show-traces">Record and show traces</label>
+          </div>
+        </header>
+        <pre><code class="traces"></code></pre>
+      </div>
+      <div class="tab-content" id="tab-code-generation">
+        <section>
+          <header>
+            <h3>JavaScript Code</h3>
+          </header>
+          <main id="js-readonly-editor"></main>
+        </section>
+        <hr>
+        <section>
+          <h3>Diagnostics</h3>
+          <div class="diagnostics">
+            <pre><code class="output"></code></pre>
+            <div class="text"><em>Click the "Compile" button.</em></div>
+          </div>
+        </section>
+      </div>
+
+      <div class="tab-content" id="tab-execution">
+        <section id="execution-results">
+          <header>
+            <h3>Execution Results</h3>
+          </header>
+          <main>
+            <div id="evaluation-result-items"></div>
+          </main>
+        </section>
+        <hr>
+        <section id="print-results">
+          <header>
+            <h3>Output from <code>print</code></h3>
+          </header>
+          <main>
+            <div id="print-result-items"></div>
+          </main>
+        </section>
+      </div>
+
+      <dialog id="error-display" aria-roledescription="dialog">
+        <header class="caption">
+          <span class="error-type">ErrorType</span>
+          <span class="error-message">This is an error message.</span>
+        </header>
+        <stack-trace data-stack-trace=""></stack-trace>
+        <footer>
+          <button class="button" id="close-error-display">Close</button>
+        </footer>
+      </dialog>
+    </div>
+  </div>
+  <template id="evaluation-result-item">
+    <style>
+      .execution-result-item {
+        background: #ffffff;
+        padding: 0.5rem;
+        border: 1px solid #aaa;
+        box-shadow: 2px 2px #ddd;
+        transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+      }
+
+      .execution-result-item:hover {
+        background-color: #f8f8f8;
+        border-color: #444
+      }
+
+      .execution-result-item>.caption {
+        font-weight: 600;
+        font-size: 0.875rem;
+        margin-bottom: 0.375rem;
+      }
+
+      .execution-result-item>hr {
+        margin: 0.5rem 0;
+        border-style: dashed;
+        border-width: 0 0 1px 0;
+      }
+
+      .execution-result-item pre {
+        margin: 0;
+      }
+
+      .execution-result-item pre code {
+        font-family: var(--monospace);
+        font-size: 0.875rem;
+        white-space: pre-wrap;
+        word-break: break-all;
+        overflow-wrap: break-word;
+      }
+    </style>
+    <section class="execution-result-item">
+      <div class="expression caption">Expression</div>
+      <pre><code id="expression">set x = 0</code></pre>
+      <hr>
+      <div class="result caption">Result</div>
+      <pre><code id="result">0</code></pre>
+    </section>
+  </template>
+  <template id="print-result-item">
+    <style>
+      .execution-result-item {
+        background: #ffffff;
+        padding: 0.5rem;
+        border: 1px solid #aaa;
+        box-shadow: 2px 2px #ddd;
+        transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+      }
+
+      .execution-result-item:hover {
+        background-color: #f8f8f8;
+        border-color: #444
+      }
+
+      .execution-result-item>.caption {
+        font-weight: 600;
+        font-size: 0.875rem;
+        margin-bottom: 0.375rem;
+      }
+
+      .execution-result-item pre {
+        margin: 0;
+      }
+
+      .execution-result-item pre code {
+        font-family: var(--monospace);
+        font-size: 0.875rem;
+        white-space: pre-wrap;
+        word-break: break-all;
+        overflow-wrap: break-word;
+      }
+    </style>
+    <section class="execution-result-item">
+      <div class="result caption">Output</div>
+      <pre><code id="result"></code></pre>
+    </section>
+  </template>
+  <template id="error-result-item">
+    <style>
+      .error-result-item {
+        background: #ffdddd;
+        padding: 0.5rem;
+        border: 1px solid #ffaaaa;
+        box-shadow: 2px 2px #ffdddd;
+        transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+      }
+
+      .error-result-item:hover {
+        background-color: #ffdddd;
+        border-color: #ffaaaa;
+      }
+
+      .error-result-item>.caption {
+        margin-bottom: 0.375rem;
+      }
+
+      #error-type {
+        font-weight: 700;
+        color: var(--error-type-color);
+      }
+
+      #error-message {
+        color: var(--error-message-color);
+        font-weight: 500;
+      }
+
+      #stack-trace {
+        padding-left: 1rem;
+        margin: 0;
+      }
+
+      #stack-trace pre {
+        margin: 0;
+      }
+
+      #stack-trace pre code {
+        font-family: var(--monospace);
+        font-size: 0.875rem;
+        white-space: pre-wrap;
+        word-break: break-all;
+        overflow-wrap: break-word;
+      }
+    </style>
+    <section class="error-result-item">
+      <div class="caption">
+        <span id="error-type"></span>
+        <span id="error-message"></span>
+      </div>
+      <ul id="stack-trace"></ul>
+    </section>
+  </template>
+  <template id="stack-trace">
+    <style>
+      ul.stack-trace {
+        padding-left: 1.5rem;
+        margin: 0.5rem 0 1rem;
+      }
+
+      ul.stack-trace li {
+        line-height: 1.25;
+      }
+
+      ul.stack-trace li:not(:last-child) {
+        margin-bottom: 0.25rem;
+      }
+
+      ul.stack-trace li code.name {
+        margin: 0;
+        font-size: 0.875rem;
+        font-family: var(--monospace);
+        word-break: break-all;
+        overflow-wrap: break-all;
+        white-space: pre-wrap;
+        background-color: #f0f0f0;
+        padding: 0 0.125rem;
+        color: #2c2c2c;
+      }
+
+      ul.stack-trace li a.file {
+        margin: 0;
+        color: #000000;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.125rem;
+      }
+    </style>
+    <ul class="stack-trace"></ul>
+  </template>
+  <template id="stack-trace-name-and-file">
+    <li>at <code class="name"></code> in <a class="file"></a></li>
+  </template>
+  <template id="stack-trace-file-only">
+    <li>at <a class="file"></a></li>
+  </template>
+  <script type="module">
+    import { basicSetup } from "codemirror"
+    import { EditorState } from "@codemirror/state"
+    import { EditorView } from "@codemirror/view"
+    import { javascript } from "@codemirror/lang-javascript"
+    Object.defineProperty(globalThis, "codemirror", {
+      value: {
+        basicSetup,
+        EditorState,
+        EditorView,
+        languages: { javascript }
+      },
+      writable: false,
+      configurable: false,
+      enumerable: true
+    })
+    const AsyncFunction = Object.getPrototypeOf(async function () { }).constructor
+    Object.defineProperty(globalThis, "AsyncFunction", {
+      value: AsyncFunction,
+      writable: false,
+      configurable: false,
+      enumerable: true
+    })
+  </script>
+  <script type="module" src="main.mjs"></script>
+</body>
+
+</html>
